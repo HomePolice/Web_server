@@ -20,6 +20,7 @@ app.set('view engine', 'ejs');
 //middleware - logger
 app.use(logger('dev'));
 //middleware - body-parser
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //middleware - cookie-parser
 app.use(cookieParser());
@@ -27,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users/', userRouter);
+app.use('/users', userRouter);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
