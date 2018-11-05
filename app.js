@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -7,6 +9,7 @@ const bodyParser = require('body-parser');
 
 
 const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user-router');
 
 const app = express();
 
@@ -24,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/users/', userRouter);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
