@@ -4,7 +4,7 @@ const databaseService = require('../database-service');
 let DTO = require('../dto');
 
 router.get('/', (req, res) => {
-    res.send("test");
+    res.send("user");
 })
 
 router.post('/', function (req, res) {

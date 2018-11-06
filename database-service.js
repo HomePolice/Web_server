@@ -73,3 +73,36 @@ exports.isValidCredentials = function (account, password) {
         })
     })
 }
+
+
+// DATA
+
+exports.getRank = function (account) {
+    return new Promise((resolve, reject) => {
+        let query = `SELECT * FROM ranks WHERE account = '${account}';`;
+        console.log(query);
+        db.pool.query(query, (err, rows) => {
+            if (err) {
+                console.log(err);
+                reject(new DTO(false, err));
+            }
+            resolve(rows);
+        })
+    })
+}
+
+// SELECT sum(count) AS abnormal_count, nation FROM homepolice.history WHERE device_id = (SELECT device_id FROM devices WHERE account = "test") GROUP BY nation;
+exports.getGeoInfo = function (account) {
+    return new Promise((resolve, reject) => {
+        let query = `SELECT sum(count) AS abnormal_count, nation FROM homepolice.history WHERE device_id = (SELECT device_id FROM devices WHERE account = '${account}') GROUP BY nation;`;
+        console.log(query);
+        db.pool.query(query, (err, rows) => {
+            if (err) {
+                console.log(err);
+                reject(new DTO(false, err));
+            }
+            console.log(rows);
+            resolve(rows);
+        })
+    })
+}
