@@ -15,6 +15,13 @@ router.post('/rank', (req, res) => {
         .catch((error) => res.json(new DTO(false, error.message)));
 })
 
+// Suspicious List
+router.post('/lists', (req, res) => {
+    databaseService.getAllHistory(req.body.account)
+        .then((result) => res.json(result))
+        .catch((error) => res.json(new DTO(false, error.message)));
+})
+
 // Geo Chart
 router.post('/geo', (req, res) => {
     databaseService.getGeoCount(req.body.account)
@@ -23,7 +30,7 @@ router.post('/geo', (req, res) => {
 })
 
 // Geo chart detail info
-router.post('/getHistory', (req, res) => {
+router.post('/getNationHistory', (req, res) => {
     databaseService.getNationHistory(req.body.account, req.body.nation)
         .then((result) => res.json(result))
         .catch((error) => res.json(new DTO(false, error.message)));
@@ -38,14 +45,14 @@ router.post('/getThreshold', (req, res) => {
 
 // Box Plot Init
 router.post('/getMost5', async (req, res) => {
-    let result = await neo4jService.getCountByIP(req.body.account, req.body.ip);
+    let result = await neo4jService.getMost5(req.body.account);
     console.log(result);
     res.send(result);
 })
 
-// Box Plot Data
-router.post('/getCountByIp', async (req, res) => {
-    let result = await neo4jService.getCountByIP(req.body.account, req.body.ip);
+// Box Plot count
+router.post('/getListByIp', async (req, res) => {
+    let result = await neo4jService.getListByIp(req.body.account, req.body.ip);
     console.log(result);
     res.send(result);
 })
@@ -53,7 +60,6 @@ router.post('/getCountByIp', async (req, res) => {
 // Net Chart
 router.post('/get2HopNet', async (req, res) => {
     let result = await neo4jService.get2HopNet(req.body.account);
-    console.log(result);
     res.send(result);
 })
 

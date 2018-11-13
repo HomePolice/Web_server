@@ -93,7 +93,7 @@ exports.getRank = function (account) {
 
 exports.getGeoCount = function (account) {
     return new Promise((resolve, reject) => {
-        let query = `SELECT sum(count) AS abnormal_count, nation FROM homepolice.history WHERE device_id = (SELECT device_id FROM devices WHERE account = '${account}') GROUP BY nation;`;
+        let query = `SELECT sum(count) AS abnormal_count, nation FROM homepolice.history WHERE account = '${account}' GROUP BY nation;`;
         console.log(query);
         db.pool.query(query, (err, rows) => {
             if (err) {
@@ -108,7 +108,7 @@ exports.getGeoCount = function (account) {
 
 exports.getNationHistory = function (account, nation) {
     return new Promise((resolve, reject) => {
-        let query = `SELECT src_ip, dest_ip, protocol, occured_time FROM homepolice.history WHERE device_id = (SELECT device_id FROM devices WHERE account = '${account}') AND nation = '${nation}';`;
+        let query = `SELECT src_ip, dest_ip, protocol, occured_time FROM homepolice.history WHERE account = '${account}' AND nation = '${nation}';`;
         console.log(query);
         db.pool.query(query, (err, rows) => {
             if (err) {
@@ -123,8 +123,23 @@ exports.getNationHistory = function (account, nation) {
 
 exports.getThreshold = function (account) {
     return new Promise((resolve, reject) => {
-        let query = `SELECT min, count , max FROM homepolice.thresholds WHERE account = '${account}';`;
+        let query = `SELECT min, origin , max FROM homepolice.thresholds WHERE account = '${account}';`;
         console.log(query);
+        db.pool.query(query, (err, rows) => {
+            if (err) {
+                console.log(err);
+                reject(new DTO(false, err));
+            }
+            console.log(rows);
+            resolve(rows);
+        })
+    })
+}
+
+exports.getAllHistory = function (account) {
+    return new Promise((resolve, reject) => {
+        let query = `SELECT * FROM homepolice.history WHERE handled = 0 LIMIT 5;`;
+        console.log(query); 
         db.pool.query(query, (err, rows) => {
             if (err) {
                 console.log(err);
