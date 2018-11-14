@@ -63,4 +63,18 @@ router.post('/get2HopNet', async (req, res) => {
     res.send(result);
 })
 
+// Latest IP
+router.post('/getLatestIp', async (req, res) => {
+    databaseService.getLatestIp(req.body.account)
+        .then((result) => res.json(result))
+        .catch((error) => res.json(new DTO(false, error.message)));
+})
+
+// register exception IP
+router.post('/registerExcept', async (req, res) => {
+    databaseService.registerExcept(req.body.account, req.body.ip)
+        .then((result) => res.json(result))
+        .catch((error) => res.json(new DTO(false, error.message)));
+})
+
 module.exports = router;
