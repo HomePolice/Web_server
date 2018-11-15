@@ -44,7 +44,7 @@ exports.getListByIp = async function(account, destIp) {
 exports.get2HopNet = async function(account) {
     return new Promise((resolve, reject) => {
         let returnPromise = neo4j.session.run(
-            'MATCH (node:' + account + ' {ip:"10.0.0.95"})-[edge:SEND*..3]->() RETURN edge, node LIMIT 6 '
+            'MATCH (node:' + account + ' {ip:"10.0.0.95"})-[edge:SEND*..3]->() RETURN edge, node LIMIT 10 '
         );
         returnPromise.then(result => {
             let edgeArray = new Array();
