@@ -1,3 +1,5 @@
+// 데이터 처리
+
 class DTO {
     constructor(success, details){
         this.success = success;

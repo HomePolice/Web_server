@@ -1,5 +1,7 @@
 const neo4j = require('./neo4j');
 
+// Neo4j 데이터베이스의 관계 중심 탐색 기능 사용을 위한 서비스
+
 // Box Plot init
 exports.getMost5 = async function(account) {
     return new Promise((resolve, reject) => {
@@ -21,6 +23,7 @@ exports.getMost5 = async function(account) {
     })
 }
 
+// Ip별 트래픽 수 조회
 exports.getListByIp = async function(account, destIp) {
     return new Promise((resolve, reject) => {
         let returnPromise = neo4j.session.run(
@@ -41,6 +44,7 @@ exports.getListByIp = async function(account, destIp) {
     })
 }
 
+// 최대 2홉의 네트워크 탐색 및 조회
 exports.get2HopNet = async function(account) {
     return new Promise((resolve, reject) => {
         let returnPromise = neo4j.session.run(

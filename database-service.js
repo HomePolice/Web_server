@@ -2,6 +2,9 @@ const db = require('./db');
 let DTO = require('./dto');
 let dateTime = require('node-datetime');
 
+// Mysql 통신 서비스
+
+/*
 exports.getAllAccounts = function () {
     return new Promise((resolve, reject) => {
         let query = 'SELECT * FROM accounts';
@@ -13,7 +16,9 @@ exports.getAllAccounts = function () {
         })
     })
 }
+*/
 
+// 회원가입 중복체크
 isExistingAccount = function (accountname) {
     return new Promise((resolve, reject) => {
         let query = `SELECT EXISTS(SELECT * FROM accounts WHERE account = '${accountname}');`;
@@ -27,6 +32,7 @@ isExistingAccount = function (accountname) {
     })
 }
 
+// 회원가입 시 데이터베이스에 새로운 유저 기록
 exports.createUser = async function (account, password) {
     let accountAlreadyExists = await isExistingAccount(account);
     console.log(accountAlreadyExists);
@@ -38,6 +44,7 @@ exports.createUser = async function (account, password) {
     }
 }
 
+// 실제 등록하는 부분
 saveUser = function (account, password) {
     return new Promise((resolve, reject) => {
         let query = "INSERT INTO accounts (account, password) VALUES (\'" + account + "\',\'" + password + "\')";
@@ -50,6 +57,7 @@ saveUser = function (account, password) {
     })
 }
 
+// 로그인
 exports.isValidCredentials = function (account, password) {
     return new Promise((resolve, reject) => {
         let query = `SELECT EXISTS(SELECT * FROM accounts WHERE account = '${account}' AND password = '${password}');`;
@@ -75,8 +83,9 @@ exports.isValidCredentials = function (account, password) {
 }
 
 
-// DATA
+// DATA 
 
+// 보안 등급을 조회
 exports.getRank = function (account) {
     return new Promise((resolve, reject) => {
         let query = `SELECT * FROM ranks WHERE account = '${account}';`;
@@ -91,6 +100,7 @@ exports.getRank = function (account) {
     })
 }
 
+// geochart에 들어갈 나라별 트래픽 조회
 exports.getGeoCount = function (account) {
     return new Promise((resolve, reject) => {
         let query = `SELECT sum(count) AS abnormal_count, nation FROM homepolice.history WHERE account = '${account}' GROUP BY nation;`;
@@ -106,6 +116,7 @@ exports.getGeoCount = function (account) {
     })
 }
 
+// 나라별 히스토리 조회
 exports.getNationHistory = function (account, nation) {
     return new Promise((resolve, reject) => {
         let query = `SELECT src_ip, dest_ip, protocol, occured_time FROM homepolice.history WHERE account = '${account}' AND nation = '${nation}';`;
@@ -121,6 +132,7 @@ exports.getNationHistory = function (account, nation) {
     })
 }
 
+// line chart 상한, 하한선 조회
 exports.getThreshold = function (account) {
     return new Promise((resolve, reject) => {
         let query = `SELECT min, origin , max FROM homepolice.thresholds WHERE account = '${account}';`;
@@ -136,9 +148,10 @@ exports.getThreshold = function (account) {
     })
 }
 
+// 메인 화면 리스트 조회
 exports.getAllHistory = function (account) {
     return new Promise((resolve, reject) => {
-        let query = `SELECT * FROM homepolice.history WHERE handled = 0 LIMIT 5;`;
+        let query = `SELECT * FROM homepolice.history WHERE handled = 0 AND account = '${account}' LIMIT 5;`;
         console.log(query); 
         db.pool.query(query, (err, rows) => {
             if (err) {
@@ -151,6 +164,8 @@ exports.getAllHistory = function (account) {
     })
 }
 
+
+// 가장 최근에 발견된 위협 조회
 exports.getLatestIp = function (account) {
     return new Promise((resolve, reject) => {
         let query = `SELECT dest_ip, nation FROM (SELECT count(*) AS cnt, dest_ip, nation, account FROM homepolice.history GROUP BY dest_ip ORDER BY occured_time DESC) AS a WHERE a.account = '${account}' AND a.cnt = 1 LIMIT 1`;
@@ -166,6 +181,7 @@ exports.getLatestIp = function (account) {
     })
 }
 
+// 예외 리스트 등록
 exports.registerExcept = function (account, ip) {
     return new Promise((resolve, reject) => {
         let query = "INSERT INTO homepolice.excepts (ip, account) VALUES (\'" + ip + "\',\'" + account + "\')";

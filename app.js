@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 
 const indexRouter = require('./routes/index');
@@ -15,6 +16,7 @@ const dataRouter = require('./routes/data-router');
 const app = express();
 
 app.use(require('connect-history-api-fallback')())
+app.use(cors());
 
 //view engine setup
 app.set('views', path.join(__dirname, 'views'));
