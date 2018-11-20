@@ -151,7 +151,7 @@ exports.getThreshold = function (account) {
 // 메인 화면 리스트 조회
 exports.getAllHistory = function (account) {
     return new Promise((resolve, reject) => {
-        let query = `SELECT * FROM homepolice.history WHERE handled = 0 AND account = '${account}' LIMIT 5;`;
+        let query = `SELECT * FROM homepolice.history WHERE handled = 0 AND account = '${account}' ORDER BY occured_time DESC LIMIT 5;`;
         console.log(query); 
         db.pool.query(query, (err, rows) => {
             if (err) {
