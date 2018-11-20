@@ -77,4 +77,11 @@ router.post('/registerExcept', async (req, res) => {
         .catch((error) => res.json(new DTO(false, error.message)));
 })
 
+// regiseter nation
+router.post('/registerNation', async (req, res) => {
+    databaseService.registerNation(req.body.account, req.body.nation, req.body.ip)
+        .then((result) => res.json(result))
+        .catch((error) => res.json(new DTO(false, error.message)));
+})
+
 module.exports = router;

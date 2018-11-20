@@ -168,7 +168,7 @@ exports.getAllHistory = function (account) {
 // 가장 최근에 발견된 위협 조회
 exports.getLatestIp = function (account) {
     return new Promise((resolve, reject) => {
-        let query = `SELECT dest_ip, nation FROM (SELECT count(*) AS cnt, dest_ip, nation, account FROM homepolice.history GROUP BY dest_ip ORDER BY occured_time DESC) AS a WHERE a.account = '${account}' AND a.cnt = 1 LIMIT 1`;
+        let query = `SELECT dest_ip, nation, occured_time FROM homepolice.history WHERE account = '${account}' ORDER BY occured_time DESC LIMIT 1;`;
         console.log(query); 
         db.pool.query(query, (err, rows) => {
             if (err) {
@@ -185,6 +185,20 @@ exports.getLatestIp = function (account) {
 exports.registerExcept = function (account, ip) {
     return new Promise((resolve, reject) => {
         let query = "INSERT INTO homepolice.excepts (ip, account) VALUES (\'" + ip + "\',\'" + account + "\')";
+        db.pool.query(query, (err, rows) => {
+            if (err) {
+                reject(new DTO(false, err));
+            }
+            resolve(rows);
+        })
+    })
+}
+
+// 나라 등록
+exports.registerNation = function (account, nation, ip) {
+    return new Promise((resolve, reject) => {
+        let query = "UPDATE homepolice.history SET nation = \'" + nation + "\' WHERE account = \'" + account + "\' AND dest_ip = \'" + ip + "\';";
+        console.log(query)
         db.pool.query(query, (err, rows) => {
             if (err) {
                 reject(new DTO(false, err));
